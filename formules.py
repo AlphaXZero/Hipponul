@@ -177,4 +177,5 @@ def str_to_list(entry):
 if __name__ == "__main__":
     print(pribi(half_float(16)))
     print(half_float_to_dec(str_to_list("0100 1100 0000 0000")))
+    print("caca")
 
