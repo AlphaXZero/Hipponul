@@ -1,13 +1,13 @@
 """Formulas Module"""
 
-ALPHAS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-ALPHA = [x for x in ALPHAS]
+ALPHA = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
 
 def dec_to_bin(nbr, nbits=0):
     binary_repr = []
     abs(nbr)
     while nbr > 0:
-        if nbr%2==0:
+        if nbr % 2 == 0:
             binary_repr.insert(0, 0)
         else:
             binary_repr.insert(0, 1)
@@ -55,8 +55,10 @@ def dec_to_y(nbr, x):
                 break
     return oui
 
-def x_to_y(nbr,x,y):
-    return dec_to_y(x_to_dec(nbr,x),y)
+
+def x_to_y(nbr, x, y):
+    nbr = str(nbr)
+    return dec_to_y(x_to_dec(nbr, x), y)
 
 
 def virgule(nbr, oui=11):
@@ -79,7 +81,7 @@ def half_float(nbr_dec):
         nbr_dec *= -1
     binary_repr = dec_to_bin(int(nbr_dec))
     rBin_unsigned = binary_repr[1:]
-    exponent=15+len(rBin_unsigned)
+    exponent = 15 + len(rBin_unsigned)
     exponent_bits = dec_to_bin(exponent, 5)
     for i in range(len(rBin_unsigned)):
         if i >= 10:
@@ -151,31 +153,15 @@ def formatage(oui, nbrBits=8):
     return oui
 
 
-def pribi(b):
-    oui = ""
-    non = ""
-    for i in range(len(b)):
-        oui += "{}".format(b[i])
-    for i in range(len(b)):
-        non += " {}".format(b[i]) if (len(oui) - i) % 4 == 0 else "{}".format(b[i])
-    return non
+def pribi(b): 
+    return str(b)
 
 
 def str_to_list(entry):
-    array = []
-    for i in entry:
-        if i ==".":
-            break
-        try:
-            array.append(ALPHA.index(i))
-        except ValueError:
-            continue
-    return array
-    # TODO map
+    entry = entry.split(".")[0]
+    indexes = map(ALPHA.index, entry.upper())
+    return list(indexes)
 
 
 if __name__ == "__main__":
-    print(pribi(half_float(16)))
-    print(half_float_to_dec(str_to_list("0100 1100 0000 0000")))
-    print("caca")
-
+    pribi(x_to_y("AB", 16, 2))
