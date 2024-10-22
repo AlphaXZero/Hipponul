@@ -153,9 +153,14 @@ def formatage(oui, nbrBits=8):
     return oui
 
 
-def pribi(b): 
-    return str(b)
-
+def pribi(binary):
+    slices = []
+    if len(binary) % 4 != 0:
+        for _ in range(4 - (len(binary) % 4)):
+            binary.insert(0, "0")
+    for step in range(int(len(binary) / 4)):
+        slices.append("".join(binary[step * 4 : (step + 1) * 4]))
+    return " ".join(slices)
 
 def str_to_list(entry):
     entry = entry.split(".")[0]
