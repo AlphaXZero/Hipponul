@@ -1,5 +1,5 @@
 """Formulas Module"""
-
+import math
 ALPHA = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 
@@ -32,15 +32,19 @@ def bit_fort(nbr, x):
             return i
         i += 1
 
+def bit_fort_opti(nbr, base):
+    return int(math.log(int(nbr,base), base))
 
-def x_to_dec(representation, x):
-    oui = str_to_list(representation)
-    tot = 0
-    for i in range(len(oui)):
-        if oui[i] >= x:
+
+def x_to_dec(rep, base):
+    """takes a string representing a number in any base and return the number in decimal"""
+    nbr = 0
+    repr_index = str_to_list(rep)
+    for i, actu in enumerate(repr_index):
+        if actu >= base:
             return "overflow"
-        tot += oui[-i - 1] * x**i
-    return tot
+        nbr += repr_index[-i -1] * base ** i
+    return nbr
 
 
 def dec_to_y(nbr, x):
@@ -137,36 +141,26 @@ def bin_to_virgule(binary_repr):
             continue
     return nbr
 
-
-def tranfo_neg(binary_repr):
-    for i in range(1, len(binary_repr)):
-        if binary_repr[-i] == 1:
-            for j in range(1, len(binary_repr) - i):
-                binary_repr[j] = 0 if binary_repr[j] == 1 else 1
-            return binary_repr
-
-
-def formatage(oui, nbrBits=8):
-    if len(oui) < nbrBits:
-        for i in range(nbrBits - len(oui)):
-            oui.insert(0, 0)
-    return oui
-
-
-def pribi(binary):
-    slices = []
-    if len(binary) % 4 != 0:
-        for _ in range(4 - (len(binary) % 4)):
-            binary.insert(0, "0")
-    for step in range(int(len(binary) / 4)):
-        slices.append("".join(binary[step * 4 : (step + 1) * 4]))
-    return " ".join(slices)
+def format_nibble(binary_repr):
+    """formats a list of characters into a single string of nibbles"""
+    if len(binary_repr) % 4 != 0:
+        for _ in range(4 - (len(binary_repr) % 4)):
+            binary_repr.insert(0, "0")
+    return " ".join("".join(binary_repr[i:i+4]) for i in range(0,len(binary_repr),4))
 
 def str_to_list(entry):
+    """takes a string representing a number in any base and returns a list of each of its digits 
+    from the integer part only"""
     entry = entry.split(".")[0]
-    indexes = map(ALPHA.index, entry.upper())
-    return list(indexes)
+    return list(map(ALPHA.index, entry.upper()))
 
 
 if __name__ == "__main__":
-    pribi(x_to_y("AB", 16, 2))
+    # for i in range(10):
+    #     j=random.randint(1,2000)
+    #     if dec_to_bin(j)!=x_to_y(j,10,2):
+    #         print("chef", j)
+    # print(dec_to_bin(1005))
+    # print(x_to_y(1005,10,2))
+    # print("fini")
+    print(dec_to_y(120,2))
