@@ -1,29 +1,38 @@
+"""GUI module"""
+
 import ttkbootstrap as ttk
-from ttkbootstrap.constants import *
-from formules import *
+import formulas as fm
 
 
-def interface_graphique():
+def graphical_user_interface():
+    """Build the GUI"""
     root = ttk.Window(themename="darkly")
     root.title("Hippocrate")
-    root.geometry("800x500")
-
-
+    root.geometry("900x500")
+    #TODO: séparer half float et conversion
     def a():
+        non = ""
+        oui2 = ""
         try:
-            oui = pribi(half_float(float(entre1.get())))
-        except:
+            oui = list(map(str, fm.half_float(float(entre1.get()))))
+            print(oui)
+            oui2=fm.base_x_to_base_y("".join(oui),2,16)
+            print(oui2)
+        except ValueError:
             pass
-        non = pribi(x_to_y(entre1.get(), int(entre2.get()),int(entree3.get())))
-        txt4["text"] = f"{non}"
-        txt6["text"] = f"{oui}"
+        if entre2.get() and entree3.get():
+            non = fm.format_nibble(
+                fm.base_x_to_base_y(entre1.get(), int(entre2.get()), int(entree3.get()))
+            )
+            
 
+        txt4["text"] = f"{non}"
+        txt6["text"] = f"{fm.format_nibble(oui)} => {fm.format_nibble(oui2)}"
 
     def b():
-        oui = half_float_to_dec((str_to_list(entre3.get())))
-        txt8["text"] = "{}".format(oui)
+        oui = fm.half_float_to_dec((fm.str_to_list(entre3.get())))
+        txt8["text"] = f"{oui}"
         return 0
-
 
     titre1 = ttk.Label(text="Conversion décimal -> x")
     txt = ttk.Label(text="Nombre decimal à convertir :")
@@ -32,12 +41,12 @@ def interface_graphique():
     txt4 = ttk.Label(text="")
     txt5 = ttk.Label(text="décimal de base en half float :")
     txt6 = ttk.Label(text="")
-    txtt1=ttk.Label(text="Base d'arrivée :")
+    txtt1 = ttk.Label(text="Base d'arrivée :")
 
     entre1 = ttk.Entry()
 
     entre2 = ttk.Entry()
-    entree3=ttk.Entry()
+    entree3 = ttk.Entry()
     bou1 = ttk.Button(text="Valider", command=a)
 
     titre1.grid(row=0, column=2)
@@ -49,10 +58,9 @@ def interface_graphique():
     txt6.grid(row=1, column=5)
     entre1.grid(row=1, column=2)
     entre2.grid(row=2, column=2)
-    entree3.grid(row=3,column=2)
+    entree3.grid(row=3, column=2)
     bou1.grid(row=2, column=3)
-    txtt1.grid(row=3,column=0)
-    
+    txtt1.grid(row=3, column=0)
 
     bou2 = ttk.Button(text="Valider", command=b)
     titre2 = ttk.Label(text="Conversion Half-Float -> nombre")
@@ -64,6 +72,5 @@ def interface_graphique():
     txt8.grid(row=5, column=3)
     entre3.grid(row=5, column=0)
     bou2.grid(row=5, column=1)
-
 
     root.mainloop()
