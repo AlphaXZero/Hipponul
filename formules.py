@@ -1,4 +1,4 @@
-"""Formulas Module"""
+"""OLD Formulas Module"""
 import math
 ALPHA = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
@@ -32,9 +32,6 @@ def bit_fort(nbr, x):
             return i
         i += 1
 
-def bit_fort_opti(nbr, base):
-    return int(math.log(int(nbr,base), base))
-
 
 def x_to_dec(rep, base):
     """takes a string representing a number in any base and return the number in decimal"""
@@ -65,17 +62,17 @@ def x_to_y(nbr, x, y):
     return dec_to_y(x_to_dec(nbr, x), y)
 
 
-def virgule(nbr, oui=11):
-    representation_binaire = []
-    nbr = nbr - int(nbr)
-    for _ in range(oui):
+def virgule(nbr, nbr_bits=11):
+    binary_rep = []
+    nbr -= int(nbr)
+    for _ in range(nbr_bits):
         nbr *= 2
         if nbr >= 1:
-            representation_binaire.append(1)
+            binary_rep.append(1)
             nbr -= 1
         else:
-            representation_binaire.append(0)
-    return representation_binaire
+            binary_rep.append(0)
+    return binary_rep
 
 
 def half_float(nbr_dec):
@@ -127,9 +124,9 @@ def float_format(nbr_dec, tot=32, mantisse=23):
 
 def half_float_to_dec(binary_repr):
     sign = -1 if binary_repr[0] == 1 else 1
-    exposant = bin_to_dec(binary_repr[1:6]) - 15
-    mantisse = 1 + bin_to_virgule(binary_repr[6:])
-    return sign * mantisse * (2**exposant)
+    exponent = bin_to_dec(binary_repr[1:6]) - 15
+    mantissa = 1 + bin_to_virgule(binary_repr[6:])
+    return sign * mantissa * (2**exponent)
 
 
 def bin_to_virgule(binary_repr):
@@ -141,12 +138,18 @@ def bin_to_virgule(binary_repr):
             continue
     return nbr
 
-def format_nibble(binary_repr):
-    """formats a list of characters into a single string of nibbles"""
-    if len(binary_repr) % 4 != 0:
-        for _ in range(4 - (len(binary_repr) % 4)):
-            binary_repr.insert(0, "0")
-    return " ".join("".join(binary_repr[i:i+4]) for i in range(0,len(binary_repr),4))
+
+def pribi(binary):
+    slices = []
+
+    if len(binary) % 4 != 0:
+        for _ in range(4 - (len(binary) % 4)):
+            binary.insert(0, "0")
+
+    for step in range(int(len(binary) / 4)):
+        slices.append("".join(binary[step * 4 : (step + 1) * 4]))
+
+    return " ".join(slices)
 
 def str_to_list(entry):
     """takes a string representing a number in any base and returns a list of each of its digits 
@@ -163,4 +166,4 @@ if __name__ == "__main__":
     # print(dec_to_bin(1005))
     # print(x_to_y(1005,10,2))
     # print("fini")
-    print(dec_to_y(120,2))
+    print(half_float(120.55))

@@ -1,6 +1,7 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from formules	import *
+from formules import *
+
 
 def interface_graphique():
     root = ttk.Window(themename="darkly")
@@ -34,6 +35,7 @@ def interface_graphique():
     txtt1=ttk.Label(text="Base d'arrivée :")
 
     entre1 = ttk.Entry()
+
     entre2 = ttk.Entry()
     entree3=ttk.Entry()
     bou1 = ttk.Button(text="Valider", command=a)
