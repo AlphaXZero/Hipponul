@@ -5,12 +5,16 @@ import math
 ALPHA = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 
-def format_nibble(binary_repr, fill=0):
-    """formats a list of characters into a single string of nibbles
-    fill=1 optional to complete first nibble with 0"""
-    if len(binary_repr) % 4 != 0 and fill == 1:
-        for _ in range(4 - (len(binary_repr) % 4)):
-            binary_repr.insert(0, "0")
+def add_zeros(binary_repr, count_bit):
+    """If not enough bit in binary_repr add 0 in front of the list"""
+    if len(binary_repr) % count_bit != 0:
+        for _ in range(count_bit - (len(binary_repr) % count_bit)):
+            binary_repr.insert(0, 0)
+    return binary_repr
+
+
+def format_nibble(binary_repr):
+    """formats a list of characters into a single string of nibbles"""
     return " ".join(
         "".join(binary_repr[i : i + 4]) for i in range(0, len(binary_repr), 4)
     )
@@ -46,7 +50,7 @@ def base_x_to_base_y(nbr_repr, base_s, base_w):
     return dec_to_base_y(int(nbr_repr, base_s), base_w)
 
 
-def comma(nbr, nbr_bits=11):
+def comma(nbr, nbr_bits=30):
     """take a float and return the non-integer part in a list
     optional nbr_bits = x where x is the number of bits wanted"""
     binary_rep = []
@@ -66,39 +70,46 @@ def bin_to_comma(binary_repr):
     returns its value, but only after a leading"""
     nbr = 0
     for i, bit in enumerate(binary_repr):
-        try:
-            nbr += 1 / (bit * 2 ** (i + 1))
-        except ZeroDivisionError:
-            continue
+        if bit:
+            nbr += 1 / 2 ** (i + 1)
     return nbr
 
 
 def half_float_to_dec(binary_repr):
     """take a represention of a half-float as a list of ints and returns his value"""
+    binary_repr = (
+        add_zeros(list(map(int, (base_x_to_base_y(binary_repr, 16, 2)))), 16)
+        if len(binary_repr) == 4
+        else binary_repr
+    )
     sign = -1 if binary_repr[0] == 1 else 1
     exponent = int("".join(map(str, binary_repr[1:6])), 2) - 15
     mantissa = 1 + bin_to_comma(binary_repr[6:])
     return sign * mantissa * (2**exponent)
 
-#TODO marche pas nbr <1 && nbr <O.
+
 def half_float(nbr):
     """take a a float and return his half_float representationa as a list of ints"""
     hf_final = [0] * 16
-    hf_final[0] = 1 if nbr < 0 else 0
+    sign = [1] if nbr < 0 else [0]
     nbr = abs(nbr)
-    binary_repr = list(reversed(bin(int(nbr))[3:]))
-    exponent_repr = list(bin(15 + len(binary_repr))[2:])
-    comma_repr = list(reversed(comma(nbr)))
-    for i in range(1,16):
-        if 0 < i < 6:
-            hf_final[i] = int(exponent_repr[i-1])
-        else:
-            if binary_repr:
-                hf_final[i] = int(binary_repr.pop())
-            else:
-                hf_final[i] = comma_repr.pop()
-    return hf_final
+    binary_repr = [int(digit) for digit in bin(int(nbr))[2:]]
+    comma_repr = comma(nbr)
+    concatenate = binary_repr + comma_repr
+    if 1 not in concatenate:
+        return hf_final
+    first_1 = concatenate.index(1)
+    exponent_value = (
+        15 - len(concatenate[:first_1])
+        if binary_repr[0] == 0 and len(binary_repr) == 1
+        else 14 + len(binary_repr)
+    )
+    concatenate = concatenate[first_1 + 1 : first_1 + 11]
+    exponent_repr = add_zeros([int(digit) for digit in bin(exponent_value)[2:]], 5)
+    return sign + exponent_repr + concatenate
 
 
 if __name__ == "__main__":
-    print(base_x_to_base_y("0101 0111 1011 0000",2,16))
+    print(half_float_to_dec(half_float(123.57)))
+    print(half_float(123.57))
+    print("hi")

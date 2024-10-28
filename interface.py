@@ -4,7 +4,7 @@ import ttkbootstrap as ttk
 import formulas as fm
 
 
-def graphical_user_interface():
+def graphical_user_interface_old():
     """Build the GUI"""
     root = ttk.Window(themename="darkly")
     root.title("Hippocrate")
@@ -15,9 +15,9 @@ def graphical_user_interface():
         oui2 = ""
         try:
             oui = list(map(str, fm.half_float(float(entre1.get()))))
-            print(oui)
+
             oui2=fm.base_x_to_base_y("".join(oui),2,16)
-            print(oui2)
+
         except ValueError:
             pass
         if entre2.get() and entree3.get():
@@ -30,7 +30,7 @@ def graphical_user_interface():
         txt6["text"] = f"{fm.format_nibble(oui)} => {fm.format_nibble(oui2)}"
 
     def b():
-        oui = fm.half_float_to_dec((fm.str_to_list(entre3.get())))
+        oui = fm.half_float_to_dec((fm.str_to_list(entre3.get()))) if len(entre3.get())==16 else fm.half_float_to_dec((entre3.get()))
         txt8["text"] = f"{oui}"
         return 0
 
@@ -74,3 +74,15 @@ def graphical_user_interface():
     bou2.grid(row=5, column=1)
 
     root.mainloop()
+
+def graphical_user_interface():
+    """Build the GUI"""
+    root = ttk.Window(themename="darkly")
+    root.title("Hippocrate")
+    root.geometry("900x500")
+
+    def half_float_converter(nbr):
+        oui = list(map(str, fm.half_float(float(entre1.get()))))
+
+    def base_converter(nbr):
+        oui2=fm.base_x_to_base_y("".join(oui),2,16)
