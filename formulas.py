@@ -110,6 +110,7 @@ def half_float(nbr):
 
 
 if __name__ == "__main__":
-    print(half_float_to_dec(half_float(123.57)))
-    print(half_float(123.57))
+    oui = 0.005
+    print(half_float_to_dec(half_float(oui)))
+    print(half_float(oui))
     print("hi")

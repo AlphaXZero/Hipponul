@@ -5,7 +5,7 @@ import interface
 
 def main():
     """main function"""
-    interface.graphical_user_interface_old()
+    interface.graphical_user_interface()
 
 
 if __name__ == "__main__":
