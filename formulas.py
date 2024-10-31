@@ -90,6 +90,8 @@ def half_float_to_dec(binary_repr):
 
 def half_float(nbr):
     """take a a float and return his half_float representationa as a list of ints"""
+    if abs(nbr) > 65504:
+        return "+infinity" if nbr > 65504 else "-infinty"
     hf_final = [0] * 16
     sign = [1] if nbr < 0 else [0]
     nbr = abs(nbr)
