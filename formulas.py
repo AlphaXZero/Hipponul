@@ -15,6 +15,7 @@ def add_zeros(binary_repr, count_bit):
 
 def format_nibble(binary_repr):
     """formats a list of characters into a single string of nibbles"""
+    binary_repr = [str(i) for i in add_zeros(binary_repr, (len(binary_repr)+(4-len(binary_repr)%4)%4))]
     return " ".join(
         "".join(binary_repr[i : i + 4]) for i in range(0, len(binary_repr), 4)
     )
@@ -112,7 +113,5 @@ def half_float(nbr):
 
 
 if __name__ == "__main__":
-    oui = 0.005
-    print(half_float_to_dec(half_float(oui)))
-    print(half_float(oui))
-    print("hi")
+    oui = base_x_to_base_y("127",10,2)
+    print(add_zeros(oui,(len(oui)+(4-len(oui)%4))))
