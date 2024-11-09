@@ -32,7 +32,8 @@ def graphical_user_interface():
             if len(entry_hfd.get()) == 16
             else fm.half_float_to_dec((entry_hfd.get()))
         )
-        result_hfd["text"] = f"{deci}"
+        deci_expo = fm.half_flaot_to_dec_2(entry_hfd.get())
+        result_hfd["text"] = f"{deci} -> {deci_expo}"
 
     def base_converter():
         """convert number in ant base in the same number in another chosen base"""

@@ -89,6 +89,21 @@ def half_float_to_dec(binary_repr):
     return sign * mantissa * (2**exponent)
 
 
+def half_flaot_to_dec_2(binary_repr):
+    """take a represention of a half-float as a list of ints and returns his value but with a sum of 2exponent"""
+    binary_repr = (
+        add_zeros(list(map(int, (base_x_to_base_y(binary_repr, 16, 2)))), 16)
+        if len(binary_repr) == 4
+        else binary_repr
+    )
+    exponent = int("".join(map(str, binary_repr[1:6])), 2) - 15
+    mantissa = [1] + binary_repr[6:]
+    result=""
+    for i, val in enumerate(mantissa):
+        result += f" 2**{exponent-i} +" if val == 1 else ""
+    return result[1:-2]
+
+
 def half_float(nbr):
     """take a a float and return his half_float representationa as a list of ints"""
     if abs(nbr) > 65504:
@@ -113,5 +128,4 @@ def half_float(nbr):
 
 
 if __name__ == "__main__":
-    oui = base_x_to_base_y("127",10,2)
-    print(add_zeros(oui,(len(oui)+(4-len(oui)%4))))
+    print(half_flaot_to_dec_2([0,1,0,0,1,1,0,1,1,0,1,0,0,0,0,0]))
