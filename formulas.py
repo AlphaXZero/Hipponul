@@ -83,9 +83,14 @@ def half_float_to_dec(binary_repr):
         if len(binary_repr) == 4
         else binary_repr
     )
+    if 1 not in binary_repr[1:6]:
+        return "dénormalisé(Den) ou 0"
+    if 0 not in binary_repr[1:6]:
+        return "infini" if 1 not in binary_repr[6:] else "NaN"
     sign = -1 if binary_repr[0] == 1 else 1
     exponent = int("".join(map(str, binary_repr[1:6])), 2) - 15
     mantissa = 1 + bin_to_comma(binary_repr[6:])
+
     return sign * mantissa * (2**exponent)
 
 
@@ -94,7 +99,7 @@ def half_flaot_to_dec_2(binary_repr):
     binary_repr = (
         add_zeros(list(map(int, (base_x_to_base_y(binary_repr, 16, 2)))), 16)
         if len(binary_repr) == 4
-        else binary_repr
+        else list(map(int,binary_repr))
     )
     exponent = int("".join(map(str, binary_repr[1:6])), 2) - 15
     mantissa = [1] + binary_repr[6:]
@@ -128,4 +133,5 @@ def half_float(nbr):
 
 
 if __name__ == "__main__":
-    print(half_flaot_to_dec_2([0,1,0,0,1,1,0,1,1,0,1,0,0,0,0,0]))
+    print(half_float_to_dec([0,1,0,0,1,1,0,1,1,0,1,0,0,0,0,0]))
+    
